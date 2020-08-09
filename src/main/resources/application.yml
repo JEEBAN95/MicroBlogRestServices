@@ -1,0 +1,9 @@
+# base property
+
+# activate profile
+spring:
+  profiles:
+    active:
+    - dev
+        
+        
