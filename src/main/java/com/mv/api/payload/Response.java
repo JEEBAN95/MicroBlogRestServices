@@ -18,7 +18,7 @@ public class Response {
 	private String messages;
 
 	public Response(String userName, String userEmail, String messages) {
-		super();
+
 		this.userName = userName;
 		this.userEmail = userEmail;
 		this.messages = messages;

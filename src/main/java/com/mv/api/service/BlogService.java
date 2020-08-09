@@ -13,7 +13,9 @@ public interface BlogService {
 
 	public String saveBlog(Blog blog, String email);
 
-	public String updateBlog(String blogName, Blog blog);
+	public Blog updateBlog(String blogName, Blog blog);
 	
 	public List<Blog> getBlogs(String email);
+
+	public String deleteBlog(String email,String blogName);
 }

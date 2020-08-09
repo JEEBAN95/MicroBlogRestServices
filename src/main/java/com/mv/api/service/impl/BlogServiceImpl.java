@@ -42,7 +42,7 @@ public class BlogServiceImpl implements BlogService {
 
 	/**
 	 * This method takes blog instance as method param persists blog details data by
-	 * invoking repository. {@link UserRepository}
+	 * using the dependency of repository. {@link BlogRpository}
 	 * 
 	 * @param blog -{@link Blog} instance
 	 * @return user -{@link User} instance.
@@ -84,8 +84,8 @@ public class BlogServiceImpl implements BlogService {
 	 * @param blogName
 	 */
 	@Override
-	public String updateBlog(String blogName, Blog updblog) {
-
+	public Blog updateBlog(String blogName, Blog updblog) {
+		LOGGER.info("BlogServiceImpl#updateBlog method execution started..");
 		Blog blog = blogRepository.findByBlogName(blogName);
 		String updcontents = updblog.getText();
 		String fileName = blog.getBlogName() + ".txt";
@@ -100,30 +100,34 @@ public class BlogServiceImpl implements BlogService {
 				blog.setBlogContents(blogContent);
 				blogRepository.save(blog);
 			}
+			return blog;
 		} catch (IOException e) {
 			LOGGER.error("Exception rised at catch block");
 			throw new ResourseNotAvailableException(storagePath.toString() + " path is not available..", e);
 		}
-		return null;
 	}
 
 	/**
-	 * 
-	*/
+	 * This method for grtting the list of blog details from the db
+	 */
 	@Override
 	public List<Blog> getBlogs(String email) {
 
+		LOGGER.info("BlogServiceImpl#getBlogs method execution started..");
+
 		User user = userRepository.findByEmail(email);
-		System.out.println(user);
-		List<Blog> blog = blogRepository.findByUser(user);
-		System.out.println(blog);
-		return blog;
+		List<Blog> blogList = blogRepository.findByUser(user);
+		return blogList;
 	}
 
 	/**
 	 * This method useed to read the file and write the blob to database
+	 * 
+	 * @see BlogServiceImpl#saveBlog(Blog, String)
 	 */
 	private byte[] readfile(Path path) {
+
+		LOGGER.info("BlogServiceImpl#readfile method execution started..");
 
 		byte[] blogContent = null;
 		try {
@@ -133,5 +137,27 @@ public class BlogServiceImpl implements BlogService {
 			LOGGER.error("Exception rised at catch block");
 			throw new ResourseNotAvailableException(storagePath.toString() + " path is not available..", e);
 		}
+	}
+
+	@Override
+	public String deleteBlog(String email, String blogName) {
+
+		User user = userRepository.findByEmail(email);
+		List<Blog> blogList = blogRepository.findByUser(user);
+		String fileName = blogName + ".txt";
+		File file = new File(storagePath.toString() + "/" + fileName);
+		blogList.forEach(blog -> {
+
+			if (blog.getBlogName().equals(blogName)) {
+				blogRepository.delete(blog);
+				try {
+					Files.deleteIfExists(file.toPath());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		return "SUCCESSFULLY DELETED";
 	}
 }

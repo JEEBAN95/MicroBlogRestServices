@@ -20,9 +20,9 @@ public class UserServiceImpl implements UserService {
 	public UserServiceImpl(UserRepository userRepository) {
 		this.userRepository = userRepository;
 		LOGGER.info("Dependancy injection is done of :" + UserRepository.class);
-		
-	}
 
+	}
+	
 	/**
 	 * This method takes user instance as method param persists {@link User} data by
 	 * invoking repository. {@link UserRepository}
@@ -34,9 +34,12 @@ public class UserServiceImpl implements UserService {
 	public User registerUser(User user) {
 
 		LOGGER.info("BlogServiceImpl#registerUser method execution is started..");
+		User availUser =  null;
 		User newUser = null;
-		if (!user.equals(null))
+		availUser = userRepository.findByEmail(user.getEmail());
+		if (availUser == null) {
 			newUser = userRepository.save(user);
+		}
 		return newUser;
-	}		
+	}
 }

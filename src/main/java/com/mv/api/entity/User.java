@@ -35,7 +35,6 @@ public class User {
 	@Column(name = "email_id")
 	private String email;
 
-
 	
 	@Override
 	public String toString() {

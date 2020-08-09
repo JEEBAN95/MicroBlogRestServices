@@ -47,7 +47,7 @@ public class Blog {
 
 	@OneToOne(fetch = FetchType.LAZY)
 	private User user;
-
+	
 	@Override
 	public String toString() {
 		return "Blog [bid=" + bid + ", blogName=" + blogName + ", blog=" + Arrays.toString(blogContents) + ", text=" + text
